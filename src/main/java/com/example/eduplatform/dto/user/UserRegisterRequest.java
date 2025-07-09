@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterRequest {
+public class UserRegisterRequest {
 
     @NotBlank(message = "Email must not be null.")
     @Email
