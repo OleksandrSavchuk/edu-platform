@@ -32,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException("User already exists with email: " + userRegisterRequest.getEmail());
         }
         userRegisterRequest.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+        userRegisterRequest.setRole(userRegisterRequest.getRole().trim().toUpperCase());
         UserResponse userResponse = userService.createUser(userRegisterRequest);
         return JwtResponse.builder()
                 .id(userResponse.getId())
