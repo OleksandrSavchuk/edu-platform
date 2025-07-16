@@ -30,9 +30,8 @@ public class AuthServiceImpl implements AuthService {
         if (userService.existsByEmail(userRegisterRequest.getEmail())) {
             throw new UserAlreadyExistsException("User already exists with email: " + userRegisterRequest.getEmail());
         }
-        userRegisterRequest.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-        userRegisterRequest.setRole(userRegisterRequest.getRole().trim().toUpperCase());
-        UserResponse userResponse = userService.createUser(userRegisterRequest);
+        UserRegisterRequest processedRequest = createProcessedRequest(userRegisterRequest);
+        UserResponse userResponse = userService.createUser(processedRequest);
         return createJwtResponse(userResponse);
     }
 
@@ -70,6 +69,14 @@ public class AuthServiceImpl implements AuthService {
                                 Role.valueOf(userResponse.getRole())
                         )
                 )
+                .build();
+    }
+
+    private UserRegisterRequest createProcessedRequest(UserRegisterRequest original) {
+        return UserRegisterRequest.builder()
+                .email(original.getEmail())
+                .password(passwordEncoder.encode(original.getPassword()))
+                .role(original.getRole().trim().toUpperCase())
                 .build();
     }
 
