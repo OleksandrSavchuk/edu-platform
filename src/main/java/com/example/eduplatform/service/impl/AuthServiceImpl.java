@@ -10,6 +10,7 @@ import com.example.eduplatform.security.JwtTokenProvider;
 import com.example.eduplatform.service.AuthService;
 import com.example.eduplatform.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (userService.existsByEmail(userRegisterRequest.getEmail())) {
             throw new UserAlreadyExistsException("User already exists with email: " + userRegisterRequest.getEmail());
+        }
+        String role = userRegisterRequest.getRole().trim().toUpperCase();
+        if (!(role.equals("USER") || role.equals("INSTRUCTOR"))) {
+            throw new AccessDeniedException("You can't register with role: " + userRegisterRequest.getRole());
         }
         UserRegisterRequest processedRequest = createProcessedRequest(userRegisterRequest);
         UserResponse userResponse = userService.createUser(processedRequest);
