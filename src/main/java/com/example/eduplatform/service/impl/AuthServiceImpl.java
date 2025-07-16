@@ -4,7 +4,6 @@ import com.example.eduplatform.dto.jwt.JwtRequest;
 import com.example.eduplatform.dto.jwt.JwtResponse;
 import com.example.eduplatform.dto.user.UserRegisterRequest;
 import com.example.eduplatform.dto.user.UserResponse;
-import com.example.eduplatform.entity.User;
 import com.example.eduplatform.entity.enums.Role;
 import com.example.eduplatform.exception.UserAlreadyExistsException;
 import com.example.eduplatform.security.JwtTokenProvider;
@@ -34,6 +33,26 @@ public class AuthServiceImpl implements AuthService {
         userRegisterRequest.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
         userRegisterRequest.setRole(userRegisterRequest.getRole().trim().toUpperCase());
         UserResponse userResponse = userService.createUser(userRegisterRequest);
+        return createJwtResponse(userResponse);
+    }
+
+    @Override
+    public JwtResponse login(JwtRequest jwtRequest) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword())
+        );
+
+        UserResponse userResponse = userService.getUserResponseByEmail(jwtRequest.getEmail());
+        return createJwtResponse(userResponse);
+    }
+
+    @Override
+    public JwtResponse refreshToken(String refreshToken) {
+        return jwtTokenProvider.refreshTokens(refreshToken);
+    }
+
+    private JwtResponse createJwtResponse(UserResponse userResponse) {
         return JwtResponse.builder()
                 .id(userResponse.getId())
                 .email(userResponse.getEmail())
@@ -52,40 +71,6 @@ public class AuthServiceImpl implements AuthService {
                         )
                 )
                 .build();
-    }
-
-    @Override
-    public JwtResponse login(JwtRequest jwtRequest) {
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword())
-        );
-
-        User user = userService.getUserByEmail(jwtRequest.getEmail());
-
-        return JwtResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .accessToken(
-                        jwtTokenProvider.createAccessToken(
-                                user.getId(),
-                                user.getEmail(),
-                                user.getRole()
-                        )
-                )
-                .refreshToken(
-                        jwtTokenProvider.createRefreshToken(
-                                user.getId(),
-                                user.getEmail(),
-                                user.getRole()
-                        )
-                )
-                .build();
-    }
-
-    @Override
-    public JwtResponse refreshToken(String refreshToken) {
-        return jwtTokenProvider.refreshTokens(refreshToken);
     }
 
 }
