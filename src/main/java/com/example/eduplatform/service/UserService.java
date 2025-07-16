@@ -17,6 +17,8 @@ public interface UserService {
 
     UserResponse updateUser(Long id, UserUpdateRequest userUpdateRequest);
 
+    UserResponse getUserResponseByEmail(String email);
+
     User getUserByEmail(String email);
 
     boolean existsByEmail(String email);
