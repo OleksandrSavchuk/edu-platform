@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException("User already exists with email: " + userRegisterRequest.getEmail());
         }
         String role = userRegisterRequest.getRole().trim().toUpperCase();
-        if (!(role.equals("USER") || role.equals("INSTRUCTOR"))) {
+        if (!(role.equals(Role.STUDENT.name()) || role.equals(Role.INSTRUCTOR.name()))) {
             throw new AccessDeniedException("You can't register with role: " + userRegisterRequest.getRole());
         }
         UserRegisterRequest processedRequest = createProcessedRequest(userRegisterRequest);
