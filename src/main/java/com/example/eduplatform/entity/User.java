@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +33,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<Course> createdCourses;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Course> enrolledCourses;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
