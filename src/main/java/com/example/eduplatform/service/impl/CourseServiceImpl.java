@@ -32,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponse updateCourse(CourseUpdateRequest courseUpdateRequest) {
+    public CourseResponse updateCourse(Long id, CourseUpdateRequest courseUpdateRequest) {
         return null;
     }
 

@@ -39,9 +39,9 @@ public class CourseController {
                 .body(courseResponse);
     }
 
-    @PutMapping
-    public ResponseEntity<CourseResponse> updateCourse(@Valid @RequestBody CourseUpdateRequest courseUpdateRequest) {
-        CourseResponse courseResponse = courseService.updateCourse(courseUpdateRequest);
+    @PutMapping("/{id}")
+    public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id, @Valid @RequestBody CourseUpdateRequest courseUpdateRequest) {
+        CourseResponse courseResponse = courseService.updateCourse(id, courseUpdateRequest);
         return ResponseEntity.ok(courseResponse);
     }
 
