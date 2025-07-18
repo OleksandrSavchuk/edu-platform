@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class CourseController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> createCourse(@Valid @RequestBody CourseCreateRequest courseCreateRequest) {
         CourseResponse courseResponse = courseService.createCourse(courseCreateRequest);
         return ResponseEntity
@@ -40,12 +42,14 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.isCourseOwner(#id)")
     public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id, @Valid @RequestBody CourseUpdateRequest courseUpdateRequest) {
         CourseResponse courseResponse = courseService.updateCourse(id, courseUpdateRequest);
         return ResponseEntity.ok(courseResponse);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.isCourseOwner(#id)")
     public ResponseEntity<CourseResponse> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
