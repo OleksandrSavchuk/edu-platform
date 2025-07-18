@@ -41,4 +41,9 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Override
+    public boolean existsByIdAndInstructorEmail(Long id, String email) {
+        return false;
+    }
+
 }

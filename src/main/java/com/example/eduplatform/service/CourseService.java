@@ -18,4 +18,6 @@ public interface CourseService {
 
     void deleteCourse(Long id);
 
+    boolean existsByIdAndInstructorEmail(Long id, String email);
+
 }
