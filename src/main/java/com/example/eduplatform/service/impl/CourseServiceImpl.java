@@ -3,11 +3,15 @@ package com.example.eduplatform.service.impl;
 import com.example.eduplatform.dto.course.CourseCreateRequest;
 import com.example.eduplatform.dto.course.CourseResponse;
 import com.example.eduplatform.dto.course.CourseUpdateRequest;
+import com.example.eduplatform.entity.Course;
+import com.example.eduplatform.exception.ResourceNotFoundException;
+import com.example.eduplatform.mapper.CourseMapper;
 import com.example.eduplatform.repository.CourseRepository;
 import com.example.eduplatform.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,35 +19,50 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
     @Override
     public CourseResponse getCourseById(Long id) {
-        return null;
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
+        return courseMapper.toDto(course);
     }
 
     @Override
     public List<CourseResponse> getAllCourses() {
-        return List.of();
+        List<Course> courses = courseRepository.findAll();
+        return courseMapper.toDto(courses);
     }
 
     @Override
     public CourseResponse createCourse(CourseCreateRequest courseCreateRequest) {
-        return null;
+        Course course = courseMapper.toEntity(courseCreateRequest);
+        course.setCreatedAt(LocalDateTime.now());
+        course.setUpdatedAt(LocalDateTime.now());
+        Course savedCourse = courseRepository.save(course);
+        return courseMapper.toDto(savedCourse);
     }
 
     @Override
     public CourseResponse updateCourse(Long id, CourseUpdateRequest courseUpdateRequest) {
-        return null;
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
+        courseMapper.updateEntityFromDto(courseUpdateRequest, course);
+        course.setUpdatedAt(LocalDateTime.now());
+        return courseMapper.toDto(courseRepository.save(course));
     }
 
     @Override
     public void deleteCourse(Long id) {
-
+        if (!courseRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Course with id " + id + " not found");
+        }
+        courseRepository.deleteById(id);
     }
 
     @Override
     public boolean existsByIdAndInstructorId(Long courseId, Long instructorId) {
-        return false;
+        return courseRepository.existsByIdAndInstructorId(courseId, instructorId);
     }
 
 }
