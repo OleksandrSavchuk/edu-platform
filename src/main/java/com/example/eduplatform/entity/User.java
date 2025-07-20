@@ -34,7 +34,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "instructor")
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> createdCourses;
 
     @ManyToMany(mappedBy = "students")

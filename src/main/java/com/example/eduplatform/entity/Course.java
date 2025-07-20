@@ -35,7 +35,7 @@ public class Course {
     )
     private List<User> students;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Module> modules;
 
     @Column(name = "created_at", nullable = false)
