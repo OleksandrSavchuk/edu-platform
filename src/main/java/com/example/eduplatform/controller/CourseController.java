@@ -50,7 +50,7 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("@customSecurityExpression.isCourseOwner(#id)")
-    public ResponseEntity<CourseResponse> deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }
