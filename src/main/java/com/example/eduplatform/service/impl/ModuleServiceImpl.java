@@ -15,9 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
 
-    private final ModuleRepository repository;
+    private final ModuleRepository moduleRepository;
 
-    private final ModuleMapper mapper;
+    private final ModuleMapper moduleMapper;
 
     @Override
     public ModuleResponse getModuleById(Long id) {
@@ -42,6 +42,11 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public void deleteModule(Long id) {
 
+    }
+
+    @Override
+    public boolean existsByIdAndCourseId(Long moduleId, Long courseId) {
+        return false;
     }
 
 }

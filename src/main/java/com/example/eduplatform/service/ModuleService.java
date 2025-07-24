@@ -18,4 +18,6 @@ public interface ModuleService {
 
     void deleteModule(Long id);
 
+    boolean existsByIdAndCourseId(Long moduleId, Long courseId);
+
 }
