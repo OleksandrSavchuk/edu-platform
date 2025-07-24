@@ -20,28 +20,25 @@ public class CustomSecurityExpression {
 
 
     public boolean canAccessUser(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email);
-        return user != null && user.getId().equals(id);
+        return getCurrentUser().getId().equals(id);
     }
 
     public boolean isCourseOwner(Long courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email);
-        Long instructorId = user.getId();
+        Long instructorId = getCurrentUser().getId();
         return courseService.existsByIdAndInstructorId(courseId, instructorId);
     }
 
     public boolean isModuleOwner(Long moduleId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email);
-        Long instructorId = user.getId();
+        Long instructorId = getCurrentUser().getId();
         Module module = moduleService.getModuleById(moduleId);
         Long courseId = module.getCourse().getId();
         return courseService.existsByIdAndInstructorId(courseId, instructorId);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userService.getUserByEmail(email);
     }
 
 }
