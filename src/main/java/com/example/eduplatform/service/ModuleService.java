@@ -13,9 +13,9 @@ public interface ModuleService {
 
     Module getModuleById(Long id);
 
-    List<ModuleResponse> getAllModules();
+    List<ModuleResponse> getAllModules(Long courseId);
 
-    ModuleResponse createModule(ModuleCreateRequest moduleCreateRequest);
+    ModuleResponse createModule(Long courseId, ModuleCreateRequest moduleCreateRequest);
 
     ModuleResponse updateModule(Long id, ModuleUpdateRequest moduleUpdateRequest);
 

@@ -31,12 +31,12 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public List<ModuleResponse> getAllModules() {
+    public List<ModuleResponse> getAllModules(Long courseId) {
         return List.of();
     }
 
     @Override
-    public ModuleResponse createModule(ModuleCreateRequest moduleCreateRequest) {
+    public ModuleResponse createModule(Long courseId, ModuleCreateRequest moduleCreateRequest) {
         return null;
     }
 
