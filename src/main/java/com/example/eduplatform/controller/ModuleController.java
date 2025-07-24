@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,27 +21,31 @@ public class ModuleController {
     private final ModuleService moduleService;
 
     @GetMapping("/modules/{id}")
+    @PreAuthorize("@customSecurityExpression.isModuleOwner(#id)")
     public ResponseEntity<ModuleResponse> getModuleById(@PathVariable Long id) {
-        ModuleResponse moduleResponse = moduleService.getModuleById(id);
+        ModuleResponse moduleResponse = moduleService.getById(id);
         return ResponseEntity.ok(moduleResponse);
     }
 
     @GetMapping("/courses/{courseId}/modules")
+    @PreAuthorize("@customSecurityExpression.isCourseOwner(#courseId)")
     public ResponseEntity<List<ModuleResponse>> getAllModules(@PathVariable Long courseId) {
-        List<ModuleResponse> moduleResponses = moduleService.getAllModules();
+        List<ModuleResponse> moduleResponses = moduleService.getAllModules(courseId);
         return ResponseEntity.ok(moduleResponses);
     }
 
     @PostMapping("/courses/{courseId}/modules")
+    @PreAuthorize("@customSecurityExpression.isCourseOwner(#courseId)")
     public ResponseEntity<ModuleResponse> createModule(@PathVariable Long courseId,
                                                        @Valid @RequestBody ModuleCreateRequest moduleCreateRequest) {
-        ModuleResponse moduleResponse = moduleService.createModule(moduleCreateRequest);
+        ModuleResponse moduleResponse = moduleService.createModule(courseId, moduleCreateRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(moduleResponse);
     }
 
     @PutMapping("/modules/{id}")
+    @PreAuthorize("@customSecurityExpression.isModuleOwner(#id)")
     public ResponseEntity<ModuleResponse> updateModule(@PathVariable Long id,
                                                        @Valid @RequestBody ModuleUpdateRequest moduleUpdateRequest) {
         ModuleResponse moduleResponse = moduleService.updateModule(id, moduleUpdateRequest);
@@ -48,6 +53,7 @@ public class ModuleController {
     }
 
     @DeleteMapping("/modules/{id}")
+    @PreAuthorize("@customSecurityExpression.isModuleOwner(#id)")
     public ResponseEntity<Void> deleteModule(@PathVariable Long id) {
         moduleService.deleteModule(id);
         return ResponseEntity.noContent().build();
