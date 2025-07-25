@@ -22,7 +22,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id) {
-        CourseResponse course = courseService.getCourseById(id);
+        CourseResponse course = courseService.getById(id);
         return ResponseEntity.ok(course);
     }
 

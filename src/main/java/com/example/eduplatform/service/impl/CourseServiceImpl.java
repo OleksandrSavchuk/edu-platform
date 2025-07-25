@@ -22,10 +22,16 @@ public class CourseServiceImpl implements CourseService {
     private final CourseMapper courseMapper;
 
     @Override
-    public CourseResponse getCourseById(Long id) {
+    public CourseResponse getById(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
         return courseMapper.toDto(course);
+    }
+
+    @Override
+    public Course getCourseById(Long id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
     }
 
     @Override
