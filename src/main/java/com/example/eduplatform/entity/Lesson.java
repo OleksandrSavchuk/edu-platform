@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "modules")
+@Table(name = "lessons")
 @Getter
 @Setter
-public class Module {
+public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,15 +22,19 @@ public class Module {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Lob
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    @Column(name = "video_url")
+    private String videoUrl;
+
     @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @JoinColumn(name = "module_id", nullable = false)
+    private Module module;
 
-    @Column(name = "module_index", nullable = false)
-    private Integer moduleIndex;
-
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lesson> lessons;
+    @Column(name = "lesson_index", nullable = false)
+    private Integer lessonIndex;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
