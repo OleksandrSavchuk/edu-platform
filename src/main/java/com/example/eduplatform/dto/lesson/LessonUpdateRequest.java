@@ -1,4 +1,4 @@
-package com.example.eduplatform.dto.module;
+package com.example.eduplatform.dto.lesson;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ModuleCreateRequest {
+public class LessonUpdateRequest {
 
     @NotBlank(message = "Title must be not null.")
     private String title;
@@ -15,10 +15,12 @@ public class ModuleCreateRequest {
     @NotBlank(message = "Description must be not null.")
     private String description;
 
-    @NotNull(message = "Module index must be not null.")
-    private Integer moduleIndex;
+    @NotBlank(message = "Content must be not null.")
+    private String content;
 
-    @NotNull(message = "Course ID must be not null.")
-    private Long courseId;
+    private String videoUrl;
+
+    @NotNull(message = "Lesson index must be not null.")
+    private Integer lessonIndex;
 
 }
