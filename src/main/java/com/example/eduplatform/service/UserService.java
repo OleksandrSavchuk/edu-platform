@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
 
-    UserResponse getUserById(Long id);
+    UserResponse getById(Long id);
 
     List<UserResponse> getAllUsers();
 
@@ -20,6 +20,8 @@ public interface UserService {
     UserResponse getUserResponseByEmail(String email);
 
     User getUserByEmail(String email);
+
+    User getUserById(Long id);
 
     boolean existsByEmail(String email);
 

@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        UserResponse userResponse = userService.getUserById(id);
+        UserResponse userResponse = userService.getById(id);
         return ResponseEntity.ok(userResponse);
     }
 
