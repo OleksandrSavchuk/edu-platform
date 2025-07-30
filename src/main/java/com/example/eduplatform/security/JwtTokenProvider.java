@@ -73,7 +73,7 @@ public class JwtTokenProvider {
         }
 
         Long userId = getUserId(refreshToken);
-        UserResponse user = userService.getUserById(userId);
+        UserResponse user = userService.getById(userId);
 
         return JwtResponse.builder()
                 .id(userId)
