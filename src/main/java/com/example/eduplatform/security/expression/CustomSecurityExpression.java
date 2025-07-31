@@ -3,6 +3,7 @@ package com.example.eduplatform.security.expression;
 import com.example.eduplatform.entity.Module;
 import com.example.eduplatform.entity.User;
 import com.example.eduplatform.service.CourseService;
+import com.example.eduplatform.service.EnrollmentService;
 import com.example.eduplatform.service.ModuleService;
 import com.example.eduplatform.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,29 @@ public class CustomSecurityExpression {
     private final UserService userService;
     private final CourseService courseService;
     private final ModuleService moduleService;
+    private final EnrollmentService enrollmentService;
 
 
     public boolean canAccessUser(Long id) {
         return getCurrentUser().getId().equals(id);
+    }
+
+    public boolean canAccessCourse(Long courseId) {
+        Long userId = getCurrentUser().getId();
+        if (courseService.existsByIdAndInstructorId(courseId, userId)) {
+            return true;
+        }
+        return enrollmentService.existsByCourseIdAndUserId(courseId, userId);
+    }
+
+    public boolean canAccessModule(Long moduleId) {
+        Long userId = getCurrentUser().getId();
+        Module module = moduleService.getModuleById(moduleId);
+        Long courseId = module.getCourse().getId();
+        if (courseService.existsByIdAndInstructorId(courseId, userId)) {
+            return true;
+        }
+        return enrollmentService.existsByCourseIdAndUserId(courseId, userId);
     }
 
     public boolean isCourseOwner(Long courseId) {
