@@ -28,6 +28,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse getById(Long id) {
+        User user = getCurrentUser();
+        if (user.getRole().name().equals("INSTRUCTOR")) {
+            Course course = courseRepository.findByIdAndInstructorId(id, user.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
+            return courseMapper.toDto(course);
+        }
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
         return courseMapper.toDto(course);
@@ -41,6 +47,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> getAllCourses() {
+        User user = getCurrentUser();
+        if (user.getRole().name().equals("INSTRUCTOR")) {
+            return courseMapper.toDto(courseRepository.findAllByInstructorId(user.getId()));
+        }
         List<Course> courses = courseRepository.findAll();
         return courseMapper.toDto(courses);
     }
