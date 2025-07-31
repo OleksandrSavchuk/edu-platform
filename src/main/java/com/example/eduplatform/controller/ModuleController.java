@@ -21,14 +21,14 @@ public class ModuleController {
     private final ModuleService moduleService;
 
     @GetMapping("/modules/{id}")
-    @PreAuthorize("@customSecurityExpression.isModuleOwner(#id)")
+    @PreAuthorize("@customSecurityExpression.canAccessModule(#id)")
     public ResponseEntity<ModuleResponse> getModuleById(@PathVariable Long id) {
         ModuleResponse moduleResponse = moduleService.getById(id);
         return ResponseEntity.ok(moduleResponse);
     }
 
     @GetMapping("/courses/{courseId}/modules")
-    @PreAuthorize("@customSecurityExpression.isCourseOwner(#courseId)")
+    @PreAuthorize("@customSecurityExpression.canAccessCourse(#courseId)")
     public ResponseEntity<List<ModuleResponse>> getAllModules(@PathVariable Long courseId) {
         List<ModuleResponse> moduleResponses = moduleService.getAllModules(courseId);
         return ResponseEntity.ok(moduleResponses);
