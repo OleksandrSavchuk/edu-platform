@@ -4,10 +4,7 @@ import com.example.eduplatform.dto.course.CourseCreateRequest;
 import com.example.eduplatform.dto.course.CourseResponse;
 import com.example.eduplatform.dto.course.CourseUpdateRequest;
 import com.example.eduplatform.entity.Course;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -16,11 +13,16 @@ public interface CourseMapper {
 
     Course toEntity(CourseCreateRequest courseCreateRequest);
 
+    @Mapping(target = "instructorName", source = ".", qualifiedByName = "formatInstructorName")
     CourseResponse toDto(Course course);
 
     List<CourseResponse> toDto(List<Course> courseList);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDto(CourseUpdateRequest courseUpdateRequest, @MappingTarget Course course);
+
+    @Named("formatInstructorName")
+    static String formatInstructorName(Course course) {
+        return course.getInstructor().getFirstName() + " " + course.getInstructor().getLastName();
+    }
 
 }

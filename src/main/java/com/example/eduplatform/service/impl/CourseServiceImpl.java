@@ -52,9 +52,8 @@ public class CourseServiceImpl implements CourseService {
         course.setInstructor(instructor);
         course.setCreatedAt(LocalDateTime.now());
         course.setUpdatedAt(LocalDateTime.now());
-        CourseResponse courseResponse = courseMapper.toDto(courseRepository.save(course));
-        courseResponse.setInstructorName(instructor.getFirstName() + " " + instructor.getLastName());
-        return courseResponse;
+        courseMapper.toDto(courseRepository.save(course));
+        return courseMapper.toDto(courseRepository.save(course));
     }
 
     @Override
