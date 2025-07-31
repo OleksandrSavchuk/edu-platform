@@ -4,11 +4,15 @@ import com.example.eduplatform.dto.course.CourseCreateRequest;
 import com.example.eduplatform.dto.course.CourseResponse;
 import com.example.eduplatform.dto.course.CourseUpdateRequest;
 import com.example.eduplatform.entity.Course;
+import com.example.eduplatform.entity.User;
 import com.example.eduplatform.exception.ResourceNotFoundException;
 import com.example.eduplatform.mapper.CourseMapper;
 import com.example.eduplatform.repository.CourseRepository;
 import com.example.eduplatform.service.CourseService;
+import com.example.eduplatform.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +24,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final UserService userService;
 
     @Override
     public CourseResponse getById(Long id) {
@@ -42,11 +47,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse createCourse(CourseCreateRequest courseCreateRequest) {
+        User instructor = getCurrentUser();
         Course course = courseMapper.toEntity(courseCreateRequest);
+        course.setInstructor(instructor);
         course.setCreatedAt(LocalDateTime.now());
         course.setUpdatedAt(LocalDateTime.now());
-        Course savedCourse = courseRepository.save(course);
-        return courseMapper.toDto(savedCourse);
+        CourseResponse courseResponse = courseMapper.toDto(courseRepository.save(course));
+        courseResponse.setInstructorName(instructor.getFirstName() + " " + instructor.getLastName());
+        return courseResponse;
     }
 
     @Override
@@ -69,6 +77,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean existsByIdAndInstructorId(Long courseId, Long instructorId) {
         return courseRepository.existsByIdAndInstructorId(courseId, instructorId);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userService.getUserByEmail(email);
     }
 
 }
