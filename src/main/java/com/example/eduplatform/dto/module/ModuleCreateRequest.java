@@ -18,7 +18,4 @@ public class ModuleCreateRequest {
     @NotNull(message = "Module index must be not null.")
     private Integer moduleIndex;
 
-    @NotNull(message = "Course ID must be not null.")
-    private Long courseId;
-
 }
