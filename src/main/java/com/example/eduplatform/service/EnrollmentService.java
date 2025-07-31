@@ -15,4 +15,6 @@ public interface EnrollmentService {
 
     void deleteEnrollment(Long id);
 
+    boolean existsByCourseIdAndUserId(Long courseId, Long userId);
+
 }

@@ -58,4 +58,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollmentRepository.deleteById(id);
     }
 
+    @Override
+    public boolean existsByCourseIdAndUserId(Long courseId, Long userId) {
+        return enrollmentRepository.existsByCourseIdAndUserId(courseId, userId);
+    }
+
 }
