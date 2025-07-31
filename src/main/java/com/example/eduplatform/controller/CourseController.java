@@ -42,14 +42,14 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@customSecurityExpression.isCourseOwner(#id)")
+    @PreAuthorize("hasRole('INSTRUCTOR') and @customSecurityExpression.isCourseOwner(#id)")
     public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id, @Valid @RequestBody CourseUpdateRequest courseUpdateRequest) {
         CourseResponse courseResponse = courseService.updateCourse(id, courseUpdateRequest);
         return ResponseEntity.ok(courseResponse);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@customSecurityExpression.isCourseOwner(#id)")
+    @PreAuthorize("hasRole('INSTRUCTOR') and @customSecurityExpression.isCourseOwner(#id)")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
