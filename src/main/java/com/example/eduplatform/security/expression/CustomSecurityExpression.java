@@ -62,6 +62,11 @@ public class CustomSecurityExpression {
         return courseService.existsByIdAndInstructorId(courseId, instructorId);
     }
 
+    public boolean isEnrolled(Long courseId) {
+        Long userId = getCurrentUser().getId();
+        return enrollmentService.existsByCourseIdAndUserId(courseId, userId);
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
