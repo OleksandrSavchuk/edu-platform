@@ -1,11 +1,9 @@
 package com.example.eduplatform.security.expression;
 
+import com.example.eduplatform.entity.Lesson;
 import com.example.eduplatform.entity.Module;
 import com.example.eduplatform.entity.User;
-import com.example.eduplatform.service.CourseService;
-import com.example.eduplatform.service.EnrollmentService;
-import com.example.eduplatform.service.ModuleService;
-import com.example.eduplatform.service.UserService;
+import com.example.eduplatform.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +17,7 @@ public class CustomSecurityExpression {
     private final CourseService courseService;
     private final ModuleService moduleService;
     private final EnrollmentService enrollmentService;
+    private final LessonService lessonService;
 
 
     public boolean canAccessUser(Long id) {
@@ -27,20 +26,21 @@ public class CustomSecurityExpression {
 
     public boolean canAccessCourse(Long courseId) {
         Long userId = getCurrentUser().getId();
-        if (courseService.existsByIdAndInstructorId(courseId, userId)) {
-            return true;
-        }
-        return enrollmentService.existsByCourseIdAndUserId(courseId, userId);
+        return isInstructorOrEnrolled(courseId, userId);
     }
 
     public boolean canAccessModule(Long moduleId) {
         Long userId = getCurrentUser().getId();
         Module module = moduleService.getModuleById(moduleId);
         Long courseId = module.getCourse().getId();
-        if (courseService.existsByIdAndInstructorId(courseId, userId)) {
-            return true;
-        }
-        return enrollmentService.existsByCourseIdAndUserId(courseId, userId);
+        return isInstructorOrEnrolled(courseId, userId);
+    }
+
+    public boolean canAccessLesson(Long lessonId) {
+        Long userId = getCurrentUser().getId();
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        Long courseId = lesson.getModule().getCourse().getId();
+        return isInstructorOrEnrolled(courseId, userId);
     }
 
     public boolean isCourseOwner(Long courseId) {
@@ -55,10 +55,22 @@ public class CustomSecurityExpression {
         return courseService.existsByIdAndInstructorId(courseId, instructorId);
     }
 
+    public boolean isLessonOwner(Long lessonId) {
+        Long instructorId = getCurrentUser().getId();
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        Long courseId = lesson.getModule().getCourse().getId();
+        return courseService.existsByIdAndInstructorId(courseId, instructorId);
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return userService.getUserByEmail(email);
+    }
+
+    private boolean isInstructorOrEnrolled(Long courseId, Long userId) {
+        return enrollmentService.existsByCourseIdAndUserId(courseId, userId) ||
+                courseService.existsByIdAndInstructorId(courseId, userId);
     }
 
 }
