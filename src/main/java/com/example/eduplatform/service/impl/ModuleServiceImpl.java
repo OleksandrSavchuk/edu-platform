@@ -5,6 +5,7 @@ import com.example.eduplatform.dto.module.ModuleResponse;
 import com.example.eduplatform.dto.module.ModuleUpdateRequest;
 import com.example.eduplatform.entity.Course;
 import com.example.eduplatform.entity.Module;
+import com.example.eduplatform.exception.DuplicateModuleIndexException;
 import com.example.eduplatform.exception.ResourceNotFoundException;
 import com.example.eduplatform.mapper.ModuleMapper;
 import com.example.eduplatform.repository.ModuleRepository;
@@ -45,6 +46,11 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public ModuleResponse createModule(Long courseId, ModuleCreateRequest moduleCreateRequest) {
+        boolean exists = moduleRepository.existsByCourseIdAndModuleIndex(courseId,
+                moduleCreateRequest.getModuleIndex());
+        if (exists) {
+            throw new DuplicateModuleIndexException(moduleCreateRequest.getModuleIndex());
+        }
         Course course = courseService.getCourseById(courseId);
         Module module = moduleMapper.toEntity(moduleCreateRequest);
         module.setCreatedAt(LocalDateTime.now());

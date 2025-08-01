@@ -11,6 +11,8 @@ public interface ModuleRepository extends JpaRepository<Module, Long> {
 
     boolean existsByIdAndCourseId(Long moduleId, Long courseId);
 
+    boolean existsByCourseIdAndModuleIndex(Long courseId, Integer moduleIndex);
+
     List<Module> findAllByCourseId(Long courseId);
 
 }
