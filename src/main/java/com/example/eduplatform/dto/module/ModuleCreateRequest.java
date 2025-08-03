@@ -1,5 +1,6 @@
 package com.example.eduplatform.dto.module;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,15 +8,28 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(description = "Request body for creating a new module")
 public class ModuleCreateRequest {
 
-    @NotBlank(message = "Title must be not null.")
+    @Schema(
+            description = "Title of the module",
+            example = "Introduction to Spring"
+    )
+    @NotBlank(message = "Title must not be null or blank.")
     private String title;
 
-    @NotBlank(message = "Description must be not null.")
+    @Schema(
+            description = "Description of the module",
+            example = "This module covers the basics of Spring Framework"
+    )
+    @NotBlank(message = "Description must not be null or blank.")
     private String description;
 
-    @NotNull(message = "Module index must be not null.")
+    @Schema(
+            description = "Index/order of the module within the course",
+            example = "1"
+    )
+    @NotNull(message = "Module index must not be null.")
     private Integer moduleIndex;
 
 }
