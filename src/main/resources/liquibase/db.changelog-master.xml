@@ -4,4 +4,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <include file="/liquibase/changesets/01-create-users-table.xml"/>
+    <include file="/liquibase/changesets/02-create-courses-table.xml"/>
+    <include file="/liquibase/changesets/03-create-modules-table.xml"/>
+    <include file="/liquibase/changesets/04-create-lessons-table.xml"/>
+    <include file="/liquibase/changesets/05-create-enrollments-table.xml"/>
 </databaseChangeLog>
