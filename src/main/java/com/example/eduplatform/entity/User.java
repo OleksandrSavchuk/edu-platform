@@ -37,9 +37,6 @@ public class User {
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> createdCourses;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Enrollment> enrollments;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
