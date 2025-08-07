@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<CourseResponse> getEnrollmentsForCurrentUser() {
         Long userId = getCurrentUser().getId();
         List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(userId);
@@ -47,6 +49,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserResponse> getUsersByCourse(Long courseId) {
         List<Enrollment> enrollments = enrollmentRepository.findAllByCourseId(courseId);
         return enrollments.stream()
@@ -56,6 +59,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    @Transactional
     public EnrollmentResponse createEnrollment(Long courseId) {
         User user = getCurrentUser();
         if (enrollmentRepository.existsByCourseIdAndUserId(courseId, user.getId())) {
@@ -70,6 +74,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    @Transactional
     public void deleteEnrollment(Long courseId) {
         Long userId = getCurrentUser().getId();
         if (!enrollmentRepository.existsByCourseIdAndUserId(courseId, userId)) {
@@ -80,6 +85,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByCourseIdAndUserId(Long courseId, Long userId) {
         return enrollmentRepository.existsByCourseIdAndUserId(courseId, userId);
     }

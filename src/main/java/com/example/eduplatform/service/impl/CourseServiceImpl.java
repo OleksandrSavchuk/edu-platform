@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +28,7 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
 
     @Override
+    @Transactional(readOnly = true)
     public CourseResponse getById(Long id) {
         User user = getCurrentUser();
         if (user.getRole().name().equals("INSTRUCTOR")) {
@@ -40,12 +42,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CourseResponse> getAllCourses() {
         User user = getCurrentUser();
         if (user.getRole().name().equals("INSTRUCTOR")) {
@@ -56,6 +60,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseResponse createCourse(CourseCreateRequest courseCreateRequest) {
         User instructor = getCurrentUser();
         Course course = courseMapper.toEntity(courseCreateRequest);
@@ -67,6 +72,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseResponse updateCourse(Long id, CourseUpdateRequest courseUpdateRequest) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
@@ -76,6 +82,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void deleteCourse(Long id) {
         if (!courseRepository.existsById(id)) {
             throw new ResourceNotFoundException("Course with id " + id + " not found");
@@ -84,6 +91,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByIdAndInstructorId(Long courseId, Long instructorId) {
         return courseRepository.existsByIdAndInstructorId(courseId, instructorId);
     }

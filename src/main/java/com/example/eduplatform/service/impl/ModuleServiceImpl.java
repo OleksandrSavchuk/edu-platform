@@ -13,6 +13,7 @@ import com.example.eduplatform.service.CourseService;
 import com.example.eduplatform.service.ModuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +27,7 @@ public class ModuleServiceImpl implements ModuleService {
     private final CourseService courseService;
 
     @Override
+    @Transactional(readOnly = true)
     public ModuleResponse getById(Long id) {
         Module module = moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
@@ -33,18 +35,21 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Module getModuleById(Long id) {
         return moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ModuleResponse> getAllModules(Long courseId) {
         List<Module> modules = moduleRepository.findAllByCourseId(courseId);
         return moduleMapper.toDto(modules);
     }
 
     @Override
+    @Transactional
     public ModuleResponse createModule(Long courseId, ModuleCreateRequest moduleCreateRequest) {
         boolean exists = moduleRepository.existsByCourseIdAndModuleIndex(courseId,
                 moduleCreateRequest.getModuleIndex());
@@ -60,6 +65,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional
     public ModuleResponse updateModule(Long id, ModuleUpdateRequest moduleUpdateRequest) {
         Module module = moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
@@ -69,6 +75,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional
     public void deleteModule(Long id) {
         if (!moduleRepository.existsById(id)) {
             throw new ResourceNotFoundException("Module with id " + id + " not found");
@@ -77,6 +84,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByIdAndCourseId(Long moduleId, Long courseId) {
         return moduleRepository.existsByIdAndCourseId(moduleId, courseId);
     }
