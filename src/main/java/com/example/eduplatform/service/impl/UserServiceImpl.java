@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         cacheManager.getCache("UserService::getByEmail").evict(user.getEmail());
         cacheManager.getCache("UserService::getUserByEmail").evict(user.getEmail());
+        cacheManager.getCache("UserService::existsByEmail").evict(user.getEmail());
         userRepository.deleteById(id);
     }
 }
