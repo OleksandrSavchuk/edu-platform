@@ -11,6 +11,9 @@ import com.example.eduplatform.repository.CourseRepository;
 import com.example.eduplatform.service.CourseService;
 import com.example.eduplatform.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final UserService userService;
+    private final CourseService self;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,13 +40,13 @@ public class CourseServiceImpl implements CourseService {
                     .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
             return courseMapper.toDto(course);
         }
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
+        Course course = self.getCourseById(id);
         return courseMapper.toDto(course);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "CourseService::getCourseById", key = "#id")
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
@@ -61,6 +65,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    @CachePut(value = "CourseService::getCourseById", key = "#result.id")
     public CourseResponse createCourse(CourseCreateRequest courseCreateRequest) {
         User instructor = getCurrentUser();
         Course course = courseMapper.toEntity(courseCreateRequest);
@@ -73,6 +78,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    @CachePut(value = "CourseService::getCourseById", key = "#id")
     public CourseResponse updateCourse(Long id, CourseUpdateRequest courseUpdateRequest) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
@@ -83,6 +89,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "CourseService::getCourseById", key = "#id")
     public void deleteCourse(Long id) {
         if (!courseRepository.existsById(id)) {
             throw new ResourceNotFoundException("Course with id " + id + " not found");
