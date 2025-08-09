@@ -12,6 +12,9 @@ import com.example.eduplatform.repository.ModuleRepository;
 import com.example.eduplatform.service.CourseService;
 import com.example.eduplatform.service.ModuleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +28,18 @@ public class ModuleServiceImpl implements ModuleService {
     private final ModuleRepository moduleRepository;
     private final ModuleMapper moduleMapper;
     private final CourseService courseService;
+    private final ModuleService self;
 
     @Override
     @Transactional(readOnly = true)
     public ModuleResponse getById(Long id) {
-        Module module = moduleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
+        Module module = self.getModuleById(id);
         return moduleMapper.toDto(module);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "ModuleService::getModuleById", key = "#id")
     public Module getModuleById(Long id) {
         return moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
@@ -50,6 +54,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     @Transactional
+    @CachePut(value = "ModuleService::getModuleById", key = "#result.id")
     public ModuleResponse createModule(Long courseId, ModuleCreateRequest moduleCreateRequest) {
         boolean exists = moduleRepository.existsByCourseIdAndModuleIndex(courseId,
                 moduleCreateRequest.getModuleIndex());
@@ -66,9 +71,16 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     @Transactional
+    @CachePut(value = "ModuleService::getModuleById", key = "#result.id")
     public ModuleResponse updateModule(Long id, ModuleUpdateRequest moduleUpdateRequest) {
         Module module = moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found"));
+        Long courseId = module.getCourse().getId();
+        Integer moduleIndex = moduleUpdateRequest.getModuleIndex();
+        boolean exists = moduleRepository.existsByCourseIdAndModuleIndex(courseId, moduleIndex);
+        if (exists) {
+            throw new DuplicateModuleIndexException(moduleIndex);
+        }
         moduleMapper.updateEntityFromDto(moduleUpdateRequest, module);
         module.setUpdatedAt(LocalDateTime.now());
         return moduleMapper.toDto(moduleRepository.save(module));
@@ -76,6 +88,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "ModuleService::getModuleById", key = "#id")
     public void deleteModule(Long id) {
         if (!moduleRepository.existsById(id)) {
             throw new ResourceNotFoundException("Module with id " + id + " not found");
