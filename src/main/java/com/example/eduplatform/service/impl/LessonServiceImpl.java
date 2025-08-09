@@ -11,6 +11,9 @@ import com.example.eduplatform.repository.LessonRepository;
 import com.example.eduplatform.service.LessonService;
 import com.example.eduplatform.service.ModuleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +27,18 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
     private final ModuleService moduleService;
+    private final LessonService self;
 
     @Override
     @Transactional(readOnly = true)
     public LessonResponse getById(Long id) {
-        Lesson lesson = lessonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Lesson with id " + id + " not found"));
+        Lesson lesson = self.getLessonById(id);
         return lessonMapper.toDto(lesson);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "LessonService::getLessonById", key = "#id")
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson with id " + id + " not found"));
@@ -49,6 +53,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
+    @CachePut(value = "LessonService::getLessonById", key = "#result.id")
     public LessonResponse createLesson(Long moduleId, LessonCreateRequest lessonCreateRequest) {
         Module module = moduleService.getModuleById(moduleId);
         Lesson lesson = lessonMapper.toEntity(lessonCreateRequest);
@@ -60,6 +65,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
+    @CachePut(value = "LessonService::getLessonById", key = "id")
     public LessonResponse updateLesson(Long id, LessonUpdateRequest lessonUpdateRequest) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson with id " + id + " not found"));
@@ -70,6 +76,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "LessonService::getLessonById", key = "#id")
     public void deleteLesson(Long id) {
         if (!lessonRepository.existsById(id)) {
             throw new ResourceNotFoundException("Lesson with id " + id + " not found");
