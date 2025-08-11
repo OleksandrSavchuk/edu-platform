@@ -70,4 +70,10 @@ public class ControllerAdvice {
         return exceptionBody;
     }
 
+    @ExceptionHandler(VideoUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleVideoUpload(VideoUploadException e) {
+        return new ExceptionBody(e.getMessage());
+    }
+
 }
