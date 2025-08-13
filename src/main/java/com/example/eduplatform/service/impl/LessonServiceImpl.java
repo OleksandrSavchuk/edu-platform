@@ -29,19 +29,18 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
     private final ModuleService moduleService;
-    private final LessonService self;
     private final VideoService videoService;
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "LessonService::getLessonById", key = "#id")
     public LessonResponse getById(Long id) {
-        Lesson lesson = self.getLessonById(id);
+        Lesson lesson = getLessonById(id);
         return lessonMapper.toDto(lesson);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "LessonService::getLessonById", key = "#id")
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson with id " + id + " not found"));
@@ -68,7 +67,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
-    @CachePut(value = "LessonService::getLessonById", key = "id")
+    @CachePut(value = "LessonService::getLessonById", key = "#result.id")
     public LessonResponse updateLesson(Long id, LessonUpdateRequest lessonUpdateRequest) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson with id " + id + " not found"));
