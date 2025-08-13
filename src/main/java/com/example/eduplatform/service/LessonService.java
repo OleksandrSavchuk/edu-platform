@@ -3,6 +3,7 @@ package com.example.eduplatform.service;
 import com.example.eduplatform.dto.lesson.LessonCreateRequest;
 import com.example.eduplatform.dto.lesson.LessonResponse;
 import com.example.eduplatform.dto.lesson.LessonUpdateRequest;
+import com.example.eduplatform.dto.lesson.LessonVideo;
 import com.example.eduplatform.entity.Lesson;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface LessonService {
     LessonResponse updateLesson(Long id, LessonUpdateRequest lessonUpdateRequest);
 
     void deleteLesson(Long id);
+
+    void uploadVideo(Long lessonId, LessonVideo video);
 
 }

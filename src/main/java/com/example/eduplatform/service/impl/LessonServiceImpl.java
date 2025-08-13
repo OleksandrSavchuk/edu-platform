@@ -3,6 +3,7 @@ package com.example.eduplatform.service.impl;
 import com.example.eduplatform.dto.lesson.LessonCreateRequest;
 import com.example.eduplatform.dto.lesson.LessonResponse;
 import com.example.eduplatform.dto.lesson.LessonUpdateRequest;
+import com.example.eduplatform.dto.lesson.LessonVideo;
 import com.example.eduplatform.entity.Lesson;
 import com.example.eduplatform.entity.Module;
 import com.example.eduplatform.exception.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import com.example.eduplatform.mapper.LessonMapper;
 import com.example.eduplatform.repository.LessonRepository;
 import com.example.eduplatform.service.LessonService;
 import com.example.eduplatform.service.ModuleService;
+import com.example.eduplatform.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -28,6 +30,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
     private final ModuleService moduleService;
     private final LessonService self;
+    private final VideoService videoService;
 
     @Override
     @Transactional(readOnly = true)
@@ -82,6 +85,16 @@ public class LessonServiceImpl implements LessonService {
             throw new ResourceNotFoundException("Lesson with id " + id + " not found");
         }
         lessonRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    @CachePut(value = "LessonService::getLessonById", key = "#lessonId")
+    public void uploadVideo(Long lessonId, LessonVideo video) {
+        Lesson lesson = getLessonById(lessonId);
+        String filename = videoService.upload(video);
+        lesson.setVideoUrl(filename);
+        lessonRepository.save(lesson);
     }
 
 }
