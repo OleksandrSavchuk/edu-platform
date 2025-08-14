@@ -3,6 +3,7 @@ package com.example.eduplatform.controller;
 import com.example.eduplatform.dto.lesson.LessonCreateRequest;
 import com.example.eduplatform.dto.lesson.LessonResponse;
 import com.example.eduplatform.dto.lesson.LessonUpdateRequest;
+import com.example.eduplatform.dto.lesson.LessonVideo;
 import com.example.eduplatform.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -85,6 +86,19 @@ public class LessonController {
     public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/lessons/{id}/video")
+    @PreAuthorize("@customSecurityExpression.isLessonOwner(#id)")
+    @Operation(
+            summary = "Upload a video for a lesson",
+            description = "Uploads a video file for the specified lesson by its ID. " +
+                    "Only the owner of the lesson can upload a video."
+    )
+    public ResponseEntity<Void> uploadVideo(@PathVariable Long id,
+                                            @Valid @ModelAttribute LessonVideo video) {
+        lessonService.uploadVideo(id, video);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }
