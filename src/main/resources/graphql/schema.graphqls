@@ -1,0 +1,5 @@
+type Mutation {
+    register(dto: UserRegisterRequest): JwtResponse
+    login(dto: UserLoginRequest): JwtResponse
+    refresh(dto: UserRefreshRequest): JwtResponse
+}

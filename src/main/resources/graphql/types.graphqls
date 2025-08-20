@@ -1,0 +1,30 @@
+input UserRegisterRequest {
+    email: String!
+    password: String!
+    passwordConfirmation: String!
+    firstName: String!
+    lastName: String!
+    role: Role!
+}
+
+input UserLoginRequest {
+    email: String!
+    password: String!
+}
+
+input UserRefreshRequest {
+    refreshToken: String!
+}
+
+type JwtResponse {
+    id: ID
+    email: String
+    accessToken: String
+    refreshToken: String
+}
+
+enum Role {
+    ADMIN,
+    STUDENT,
+    INSTRUCTOR
+}
