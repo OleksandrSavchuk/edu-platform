@@ -1,0 +1,18 @@
+input CourseCreateRequest {
+    title: String!
+    description: String!
+}
+
+input CourseUpdateRequest {
+    title: String!
+    description: String!
+}
+
+type CourseResponse {
+    id: ID
+    title: String
+    description: String
+    instructorName: String
+    createdAt: LocalDateTime
+    updatedAt: LocalDateTime
+}

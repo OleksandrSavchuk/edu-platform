@@ -1,6 +1,12 @@
 type Query {
+
+    #User
     getUserById(id: ID): UserResponse
     getAllUsers: [UserResponse]
+
+    #Course
+    getCourseById(id: ID): CourseResponse
+    getAllCourses: [CourseResponse]
 
 }
 
@@ -14,5 +20,10 @@ type Mutation {
     #User
     updateUser(userUpdateRequest: UserUpdateRequest): UserResponse
     deleteUser(id: ID): Boolean
+
+    #Course
+    createCourse(courseCreateRequest: CourseCreateRequest): CourseResponse
+    updateCourse(courseUpdateRequest: CourseUpdateRequest): CourseResponse
+    deleteCourse(id: ID): Boolean
 
 }
