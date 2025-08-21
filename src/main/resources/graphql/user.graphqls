@@ -1,0 +1,15 @@
+scalar LocalDateTime
+
+input UserUpdateRequest {
+    firstName: String
+    lastName: String
+}
+
+type UserResponse {
+    id: ID
+    email: String
+    firstName: String
+    lastName: String
+    role: Role
+    createdAt: LocalDateTime
+}

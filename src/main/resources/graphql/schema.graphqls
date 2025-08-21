@@ -1,5 +1,18 @@
+type Query {
+    getUserById(id: ID): UserResponse
+    getAllUsers: [UserResponse]
+
+}
+
 type Mutation {
-    register(dto: UserRegisterRequest): JwtResponse
-    login(dto: UserLoginRequest): JwtResponse
-    refresh(dto: UserRefreshRequest): JwtResponse
+
+    #Auth
+    register(userRegisterRequest: UserRegisterRequest): JwtResponse
+    login(jwtRequest: UserLoginRequest): JwtResponse
+    refresh(refreshTokenRequest: UserRefreshRequest): JwtResponse
+
+    #User
+    updateUser(userUpdateRequest: UserUpdateRequest): UserResponse
+    deleteUser(id: ID): Boolean
+
 }
