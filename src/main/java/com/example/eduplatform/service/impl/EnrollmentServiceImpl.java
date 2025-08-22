@@ -33,19 +33,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentMapper enrollmentMapper;
     private final UserService userService;
     private final CourseService courseService;
-    private final CourseMapper courseMapper;
     private final UserMapper userMapper;
 
 
     @Override
     @Transactional(readOnly = true)
-    public List<CourseResponse> getEnrollmentsForCurrentUser() {
+    public List<EnrollmentResponse> getEnrollmentsForCurrentUser() {
         Long userId = getCurrentUser().getId();
         List<Enrollment> enrollments = enrollmentRepository.findAllByUserId(userId);
-        return enrollments.stream()
-                .map(Enrollment::getCourse)
-                .map(courseMapper::toDto)
-                .collect(Collectors.toList());
+        return enrollmentMapper.toDto(enrollments);
     }
 
     @Override

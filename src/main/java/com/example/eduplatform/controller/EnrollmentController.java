@@ -30,8 +30,8 @@ public class EnrollmentController {
             summary = "Get enrolled courses",
             description = "Returns a list of courses the currently authenticated student is enrolled in."
     )
-    public ResponseEntity<List<CourseResponse>> getAllMyEnrollments() {
-        List<CourseResponse> courses = enrollmentService.getEnrollmentsForCurrentUser();
+    public ResponseEntity<List<EnrollmentResponse>> getAllMyEnrollments() {
+        List<EnrollmentResponse> courses = enrollmentService.getEnrollmentsForCurrentUser();
         return ResponseEntity.ok(courses);
     }
 

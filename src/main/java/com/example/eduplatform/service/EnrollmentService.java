@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EnrollmentService {
 
-    List<CourseResponse> getEnrollmentsForCurrentUser();
+    List<EnrollmentResponse> getEnrollmentsForCurrentUser();
 
     List<UserResponse> getUsersByCourse(Long courseId);
 
