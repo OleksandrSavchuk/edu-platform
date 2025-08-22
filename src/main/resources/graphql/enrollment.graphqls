@@ -1,0 +1,6 @@
+type EnrollmentResponse {
+    id: ID
+    userId: ID
+    courseId: ID
+    enrolledAt: LocalDateTime
+}
