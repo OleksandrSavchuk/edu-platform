@@ -18,9 +18,19 @@ public class GraphqlConfig {
     }
 
     @Bean
+    public GraphQLScalarType uploadScalar() {
+        return GraphQLScalarType.newScalar()
+                .name("Upload")
+                .description("Upload scalar")
+                .coercing(new UploadCoercing())
+                .build();
+    }
+
+    @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder
                 .scalar(localDateTimeScalar())
+                .scalar(uploadScalar())
                 .build();
     }
 
