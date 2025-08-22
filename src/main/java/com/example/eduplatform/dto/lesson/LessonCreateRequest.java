@@ -39,13 +39,6 @@ public class LessonCreateRequest {
     private String videoUrl;
 
     @Schema(
-            description = "ID of the module to which the lesson belongs.",
-            example = "5"
-    )
-    @NotNull(message = "Module ID must not be null.")
-    private Long moduleId;
-
-    @Schema(
             description = "Index/order of the lesson within the module",
             example = "1"
     )
