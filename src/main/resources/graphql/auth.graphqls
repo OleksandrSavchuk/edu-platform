@@ -22,9 +22,3 @@ type JwtResponse {
     accessToken: String
     refreshToken: String
 }
-
-enum Role {
-    ADMIN,
-    STUDENT,
-    INSTRUCTOR
-}
