@@ -1,0 +1,33 @@
+scalar Upload
+
+input LessonCreateRequest {
+    title: String!
+    description: String!
+    content: String!
+    videoUrl: String
+    moduleId: ID!
+    lessonIndex: Int!
+}
+
+input LessonUpdateRequest {
+    title: String!
+    description: String!
+    content: String!
+    videoUrl: String
+    lessonIndex: Int!
+}
+
+input LessonVideo {
+    file: Upload!
+}
+
+type LessonResponse {
+    title: String
+    description: String
+    content: String
+    videoUrl: String
+    moduleId: ID
+    lessonIndex: Int
+    createdAt: LocalDateTime
+    updatedAt: LocalDateTime
+}

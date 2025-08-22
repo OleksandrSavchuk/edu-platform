@@ -18,6 +18,10 @@ type Query {
     getModuleById(id: ID): ModuleResponse
     getAllModules(courseId: ID): [ModuleResponse]
 
+    #Lesson
+    getLessonById(id: ID): LessonResponse
+    getAllLessons(moduleId: ID): [LessonResponse]
+
 }
 
 type Mutation {
@@ -44,5 +48,11 @@ type Mutation {
     createModule(moduleCreateRequest: ModuleCreateRequest): ModuleResponse
     updateModule(moduleUpdateRequest: ModuleUpdateRequest): ModuleResponse
     deleteModule(id: ID): Boolean
+
+    #Lesson
+    createLesson(lessonCreateRequest: LessonCreateRequest): LessonResponse
+    updateLesson(lessonUpdateRequest: LessonUpdateRequest): LessonResponse
+    deleteLesson(id: ID): Boolean
+    uploadVideo(video: LessonVideo): Boolean
 
 }
