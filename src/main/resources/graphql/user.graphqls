@@ -1,5 +1,3 @@
-scalar LocalDateTime
-
 input UserUpdateRequest {
     firstName: String
     lastName: String

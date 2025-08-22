@@ -1,3 +1,5 @@
+scalar LocalDateTime
+
 type Query {
 
     #User
@@ -25,5 +27,9 @@ type Mutation {
     createCourse(courseCreateRequest: CourseCreateRequest): CourseResponse
     updateCourse(courseUpdateRequest: CourseUpdateRequest): CourseResponse
     deleteCourse(id: ID): Boolean
+
+    #Enrollment
+    createEnrollment(courseId: ID): EnrollmentResponse
+    deleteEnrollment(courseId: ID): Boolean
 
 }
