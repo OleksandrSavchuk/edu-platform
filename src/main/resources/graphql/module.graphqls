@@ -1,0 +1,21 @@
+input ModuleCreateRequest {
+    title: String!
+    description: String!
+    moduleIndex: Int!
+}
+
+input ModuleUpdateRequest {
+    title: String!
+    description: String!
+    moduleIndex: Int!
+}
+
+type ModuleResponse {
+    id: ID
+    title: String
+    description: String
+    moduleIndex: Int
+    courseId: ID
+    createdAt: LocalDateTime
+    updatedAt: LocalDateTime
+}

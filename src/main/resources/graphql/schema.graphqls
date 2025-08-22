@@ -14,6 +14,10 @@ type Query {
     getAllMyEnrollments: [EnrollmentResponse]
     getEnrolledUsers(courseId: ID): [UserResponse]
 
+    #Module
+    getModuleById(id: ID): ModuleResponse
+    getAllModules(courseId: ID): [ModuleResponse]
+
 }
 
 type Mutation {
@@ -35,5 +39,10 @@ type Mutation {
     #Enrollment
     createEnrollment(courseId: ID): EnrollmentResponse
     deleteEnrollment(courseId: ID): Boolean
+
+    #Module
+    createModule(moduleCreateRequest: ModuleCreateRequest): ModuleResponse
+    updateModule(moduleUpdateRequest: ModuleUpdateRequest): ModuleResponse
+    deleteModule(id: ID): Boolean
 
 }
