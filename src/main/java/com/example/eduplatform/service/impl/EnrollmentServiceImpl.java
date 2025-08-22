@@ -1,6 +1,5 @@
 package com.example.eduplatform.service.impl;
 
-import com.example.eduplatform.dto.course.CourseResponse;
 import com.example.eduplatform.dto.enrollment.EnrollmentResponse;
 import com.example.eduplatform.dto.user.UserResponse;
 import com.example.eduplatform.entity.Course;
@@ -8,7 +7,6 @@ import com.example.eduplatform.entity.Enrollment;
 import com.example.eduplatform.entity.User;
 import com.example.eduplatform.exception.AlreadyEnrolledException;
 import com.example.eduplatform.exception.ResourceNotFoundException;
-import com.example.eduplatform.mapper.CourseMapper;
 import com.example.eduplatform.mapper.EnrollmentMapper;
 import com.example.eduplatform.mapper.UserMapper;
 import com.example.eduplatform.repository.EnrollmentRepository;

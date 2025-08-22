@@ -1,6 +1,5 @@
 package com.example.eduplatform.controller;
 
-import com.example.eduplatform.dto.course.CourseResponse;
 import com.example.eduplatform.dto.enrollment.EnrollmentResponse;
 import com.example.eduplatform.dto.user.UserResponse;
 import com.example.eduplatform.service.EnrollmentService;
