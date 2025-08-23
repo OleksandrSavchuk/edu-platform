@@ -7,12 +7,12 @@ input UserRegisterRequest {
     role: Role!
 }
 
-input UserLoginRequest {
+input JwtRequest {
     email: String!
     password: String!
 }
 
-input UserRefreshRequest {
+input RefreshTokenRequest {
     refreshToken: String!
 }
 

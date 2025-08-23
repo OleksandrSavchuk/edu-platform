@@ -28,8 +28,8 @@ type Mutation {
 
     #Auth
     register(userRegisterRequest: UserRegisterRequest): JwtResponse
-    login(jwtRequest: UserLoginRequest): JwtResponse
-    refresh(refreshTokenRequest: UserRefreshRequest): JwtResponse
+    login(jwtRequest: JwtRequest): JwtResponse
+    refresh(refreshTokenRequest: RefreshTokenRequest): JwtResponse
 
     #User
     updateUser(userUpdateRequest: UserUpdateRequest): UserResponse
