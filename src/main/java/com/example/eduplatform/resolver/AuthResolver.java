@@ -1,4 +1,4 @@
-package com.example.eduplatform.resolver.auth;
+package com.example.eduplatform.resolver;
 
 import com.example.eduplatform.dto.jwt.JwtRequest;
 import com.example.eduplatform.dto.jwt.JwtResponse;
