@@ -38,8 +38,9 @@ public class UserResolver {
 
     @MutationMapping
     @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
-    public void deleteUser(@Argument Long id) {
+    public Boolean deleteUser(@Argument Long id) {
         userService.deleteUser(id);
+        return true;
     }
 
 }
