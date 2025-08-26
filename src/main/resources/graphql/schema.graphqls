@@ -32,12 +32,12 @@ type Mutation {
     refresh(refreshTokenRequest: RefreshTokenRequest): JwtResponse
 
     #User
-    updateUser(userUpdateRequest: UserUpdateRequest): UserResponse
+    updateUser(id:ID, userUpdateRequest: UserUpdateRequest): UserResponse
     deleteUser(id: ID): Boolean
 
     #Course
     createCourse(courseCreateRequest: CourseCreateRequest): CourseResponse
-    updateCourse(courseUpdateRequest: CourseUpdateRequest): CourseResponse
+    updateCourse(id: ID, courseUpdateRequest: CourseUpdateRequest): CourseResponse
     deleteCourse(id: ID): Boolean
 
     #Enrollment
@@ -45,14 +45,14 @@ type Mutation {
     deleteEnrollment(courseId: ID): Boolean
 
     #Module
-    createModule(moduleCreateRequest: ModuleCreateRequest): ModuleResponse
-    updateModule(moduleUpdateRequest: ModuleUpdateRequest): ModuleResponse
+    createModule(courseId: ID, moduleCreateRequest: ModuleCreateRequest): ModuleResponse
+    updateModule(id: ID, moduleUpdateRequest: ModuleUpdateRequest): ModuleResponse
     deleteModule(id: ID): Boolean
 
     #Lesson
     createLesson(lessonCreateRequest: LessonCreateRequest): LessonResponse
-    updateLesson(lessonUpdateRequest: LessonUpdateRequest): LessonResponse
+    updateLesson(id: ID, lessonUpdateRequest: LessonUpdateRequest): LessonResponse
     deleteLesson(id: ID): Boolean
-    uploadVideo(video: LessonVideo): Boolean
+    uploadVideo(id: ID, video: LessonVideo): Boolean
 
 }
