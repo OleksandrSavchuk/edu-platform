@@ -2,9 +2,11 @@ package com.example.eduplatform.dto.jwt;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Schema(description = "Request for login")
 public class JwtRequest {
 

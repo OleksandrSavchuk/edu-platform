@@ -2,6 +2,7 @@ package com.example.eduplatform.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @Schema(description = "Response object containing user details")
 public class UserResponse {
 

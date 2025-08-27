@@ -2,11 +2,13 @@ package com.example.eduplatform.dto.course;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @Schema(description = "Request body for creating a new course")
 public class CourseCreateRequest {
 
