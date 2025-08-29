@@ -29,10 +29,10 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final UserService userService;
-    private final CourseService self;
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "CourseService::getCourseById", key = "#id")
     public CourseResponse getById(Long id) {
         User user = getCurrentUser();
         if (user.getRole().name().equals("INSTRUCTOR")) {
@@ -40,13 +40,13 @@ public class CourseServiceImpl implements CourseService {
                     .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
             return courseMapper.toDto(course);
         }
-        Course course = self.getCourseById(id);
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
         return courseMapper.toDto(course);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "CourseService::getCourseById", key = "#id")
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found"));
