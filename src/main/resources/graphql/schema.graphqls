@@ -50,7 +50,7 @@ type Mutation {
     deleteModule(id: ID): Boolean
 
     #Lesson
-    createLesson(lessonCreateRequest: LessonCreateRequest): LessonResponse
+    createLesson(moduleId: ID, lessonCreateRequest: LessonCreateRequest): LessonResponse
     updateLesson(id: ID, lessonUpdateRequest: LessonUpdateRequest): LessonResponse
     deleteLesson(id: ID): Boolean
     uploadVideo(id: ID, video: LessonVideo): Boolean
