@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
+@Jacksonized
 @Schema(description = "Response object containing module details")
 public class ModuleResponse {
 
