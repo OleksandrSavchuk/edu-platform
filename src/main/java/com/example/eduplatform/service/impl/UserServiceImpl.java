@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
             put = {
                     @CachePut(value = "UserService::getById", key = "#result.id"),
                     @CachePut(value = "UserService::getByEmail", key = "#result.email"),
-                    @CachePut(value = "UserService::getUserByEmail", key = "#result.email")
             }
     )
     public UserResponse updateUser(Long id, UserUpdateRequest userUpdateRequest) {
@@ -89,7 +88,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "UserService::getUserByEmail", key = "#email")
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
@@ -109,7 +107,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
         cacheManager.getCache("UserService::getByEmail").evict(user.getEmail());
-        cacheManager.getCache("UserService::getUserByEmail").evict(user.getEmail());
         cacheManager.getCache("UserService::existsByEmail").evict(user.getEmail());
         userRepository.deleteById(id);
     }
